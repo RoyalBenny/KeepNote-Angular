@@ -1,6 +1,6 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-
+import { map} from 'rxjs/operators';
 @Injectable()
 export class AuthenticationService {
   url:string;
@@ -21,8 +21,8 @@ export class AuthenticationService {
   }
 
   isUserAuthenticated(token): Promise<any> {
-    return this.http.post(this.url + 'isAuthenticated', {
+    return this.http.post(this.url + 'isAuthenticated', {},{
       headers:{ Authorization: 'Bearer ' + token }
-    }).toPromise();
+    }).pipe( map(res => res['isAuthenticated'])).toPromise();
   }
 }

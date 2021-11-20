@@ -16,14 +16,15 @@ export class CanActivateRouteGuard implements CanActivate {
     next: ActivatedRouteSnapshot,
     state: RouterStateSnapshot): Observable<boolean> | Promise<boolean> | boolean {
       return new Promise((resolve, reject) => {
+        console.log("CanActivateRouteGuard token"+this.token);
        this.authenticationService.isUserAuthenticated(this.token).then((data) => {
-          if(data) {
-            resolve(true);
-          } else {
+          if(!data) {
             reject(false);
             this.routerService.routeToLogin();
-            
+          } else {
+            resolve(true);
           }
+        
         });
       }
     );

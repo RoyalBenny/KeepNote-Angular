@@ -17,17 +17,24 @@ export class NotesService {
     this.token = this.authentication.getBearerToken();
     this.url = 'http://localhost:3000/api/v1/notes';
   }
-  fetchNotesFromServer():Observable<Array<Note>> {
-    return this.httpClient.get<Array<Note>>(this.url, {
+  fetchNotesFromServer() {
+     this.httpClient.get<Array<Note>>(this.url, {
       headers: { "Authorization":"Bearer "+this.token }
-    });
+    }).subscribe(notes => {
+      this.notes = notes;
+      this.notesSubject.next(this.notes);
+    },
+    err => {
+      console.log(err);
+    }
+    );
   }
 
   getNotes(): BehaviorSubject<Array<Note>> {
-    this.fetchNotesFromServer().subscribe(notes => {
-      this.notes = notes;
-      this.notesSubject.next(this.notes);
-    });
+    // this.fetchNotesFromServer().subscribe(notes => {
+    //   this.notes = notes;
+    //   this.notesSubject.next(this.notes);
+    // });
     return this.notesSubject;
   }
 
